@@ -125,7 +125,11 @@ define(function(require) {
 				$.each(data.data, function (index, row) {
 					rowHTML += '<tr>';
 					$.each(self.columns, function (index, column) {
-						rowHTML += '<td>' + row[column.property] + '</td>';
+						if (column.html) {
+							rowHTML += '<td>' + column.html(row) + '</td>';
+						} else {
+							rowHTML += '<td>' + row[column.property] + '</td>';
+						}
 					});
 					rowHTML += '</tr>';
 				});
