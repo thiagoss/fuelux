@@ -20,6 +20,7 @@ define(function(require) {
 		this.$footerchildren = this.$footer.children();
 		this.$topheader = this.$element.find('thead th');
 		this.$searchcontrol = this.$element.find('.search');
+		this.$filtercontrol = this.$element.find('.filter');
 		this.$pagesize = this.$element.find('.grid-pagesize');
 		this.$pageinput = this.$element.find('.grid-pager input');
 		this.$pagedropdown = this.$element.find('.grid-pager .dropdown-menu');
@@ -40,6 +41,7 @@ define(function(require) {
 		this.$nextpagebtn.on('click', $.proxy(this.next, this));
 		this.$prevpagebtn.on('click', $.proxy(this.previous, this));
 		this.$searchcontrol.on('searched cleared', $.proxy(this.searchChanged, this));
+		this.$filtercontrol.on('change', $.proxy(this.filterChanged, this));
 		this.$colheader.on('click', 'th', $.proxy(this.headerClicked, this));
 		this.$pagesize.on('change', $.proxy(this.pagesizeChanged, this));
 		this.$pageinput.on('change', $.proxy(this.pageChanged, this));
@@ -184,6 +186,17 @@ define(function(require) {
 			this.renderData();
 		},
 
+		filterChanged: function (e) {
+			var c = $(e.target).data('property');
+			var val = $(e.target).val();
+			if (val === "")
+				delete this.options.dataOptions.filters[c];
+			else
+				this.options.dataOptions.filters[c] = val;
+			this.options.dataOptions.pageIndex = 0;
+			this.renderData();
+		},
+
 		previous: function () {
 			this.options.dataOptions.pageIndex--;
 			this.renderData();
@@ -211,7 +224,7 @@ define(function(require) {
 	};
 
 	$.fn.datagrid.defaults = {
-		dataOptions: { pageIndex: 0, pageSize: 10 },
+		dataOptions: { pageIndex: 0, pageSize: 10, filters: {} },
 		loadingHTML: '<div class="progress progress-striped active" style="width:50%;margin:auto;"><div class="bar" style="width:100%;"></div></div>',
 		itemsText: 'items',
 		itemText: 'item'

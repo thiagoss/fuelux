@@ -44,6 +44,17 @@
 					});
 				}
 
+				// FILTERING
+				if (options.filters) {
+					$.each( options.filters , function(c, v) {
+						data = _.filter(data, function (item) {
+							if (!item.hasOwnProperty(c)) return false;
+							if (~item[c].toString().toLowerCase().indexOf(v.toLowerCase())) return true;
+							return false;
+						});
+					});
+				}
+
 				var count = data.length;
 
 				// SORTING
